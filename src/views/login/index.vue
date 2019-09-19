@@ -61,9 +61,17 @@ export default {
             url: '/authorizations',
             data: this.loginFrom
           }).then(result => {
-            console.log(result)
-          }).catch(error => {
-            console.log(error)
+            // 成功
+            // 将后台返回的令牌暂存到缓存中
+            window.localStorage.setItem('user-token', result.data.data.token)
+            // 编程式导航跳转
+            this.$router.push('/home')
+          }).catch(() => {
+            // 失败
+            this.$message({
+              type: 'warning',
+              message: '宁的手机号或验证码输入错误嗷'
+            })
           })
         }
       })
