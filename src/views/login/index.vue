@@ -54,9 +54,17 @@ export default {
   methods: {
     login () {
       // validate方法，方法中传入一个函数 俩个校验参数 是否校验成功/为校验成功的子段
-      this.$refs.myForm.validate(function (isOK) {
+      this.$refs.myForm.validate((isOK) => {
         if (isOK) {
-          console.log('校验成功')
+          this.$axios({
+            method: 'post',
+            url: '/authorizations',
+            data: this.loginFrom
+          }).then(result => {
+            console.log(result)
+          }).catch(error => {
+            console.log(error)
+          })
         }
       })
     }
