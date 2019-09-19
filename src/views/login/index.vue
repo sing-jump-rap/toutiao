@@ -20,7 +20,7 @@
                   <el-checkbox v-model="loginFrom.agree">我已阅读还同意条款了</el-checkbox>
               </el-form-item>
               <el-form-item>
-                  <el-button type="primary" style="width:100%">登录</el-button>
+                  <el-button @click="login" type="primary" style="width:100%">登录</el-button>
               </el-form-item>
           </el-form>
       </el-card>
@@ -30,6 +30,9 @@
 <script>
 export default {
   data () {
+    let validator = function (rules, value, callBack) {
+      value ? callBack() : callBack(new Error('你必须勾选用户协议'))
+    }
     return {
       // 数据对象
       loginFrom: {
@@ -40,9 +43,11 @@ export default {
       // 校验规则  key(字段名)：value（对象数组）=> 一个对象就是一个校验规则
       // required为true表示为必填项，如不填就会提示message的消息
       loginRules: {
-        mobile: [{ required: true, message: '请输入宁的手机号' }],
-        code: [{ required: true, message: '请输入宁的验证码' }],
-        agree: []
+        mobile: [{ required: true, message: '请输入宁的手机号' },
+          { pattern: /^1[3456789]\d{9}$/, message: '输入的手机号不正确' }],
+        code: [{ required: true, message: '请输入宁的验证码' },
+          { pattern: /^\d{6}$/, message: '你输入的验证码不正确' }],
+        agree: [{ validator }]
       }
     }
   },
@@ -51,7 +56,6 @@ export default {
       // validate方法，方法中传入一个函数 俩个校验参数 是否校验成功/为校验成功的子段
       this.$refs.myForm.validate(function (isOK) {
         if (isOK) {
-          debugger
           console.log('校验成功')
         }
       })
