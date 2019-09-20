@@ -8,14 +8,15 @@
     <el-col :span="4">
       <!-- 右侧 -->
       <img class="head-img" :src="userInfo.photo?userInfo.photo:defaultImg" alt="" style="margin-right:5px">
-      <el-dropdown>
+      <!-- elementui自定义事件command -->
+      <el-dropdown trigger="click" @command='commonClick'>
         <span class="el-dropdown-link">
           {{ userInfo.name }}<i class="el-icon-arrow-down el-icon--right"></i>
         </span>
         <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item>个人信息</el-dropdown-item>
-          <el-dropdown-item>git地址</el-dropdown-item>
-          <el-dropdown-item>退出</el-dropdown-item>
+          <el-dropdown-item command='account'>个人信息</el-dropdown-item>
+          <el-dropdown-item command='git'>git地址</el-dropdown-item>
+          <el-dropdown-item command='lgout'>退出</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
     </el-col>
@@ -39,6 +40,18 @@ export default {
       }).then(result => {
         this.userInfo = result.data.data// 接收数据对象
       })
+    },
+    commonClick (key) {
+      if (key === 'account') {
+        // 账户信息
+      } else if (key === 'git') {
+        // git地址
+        window.location.href = 'https://github.com/sing-jump-rap/toutiao-81/commits/master'
+      } else {
+        // 退出
+        window.localStorage.clear()// 清除本地token
+        this.$router.push('/login')// 跳转登录页
+      }
     }
   },
   // 钩子函数，实例创建前后前
