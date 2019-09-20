@@ -44,6 +44,7 @@ export default {
     commonClick (key) {
       if (key === 'account') {
         // 账户信息
+        this.$router.push('/home/account')
       } else if (key === 'git') {
         // git地址
         window.location.href = 'https://github.com/sing-jump-rap/toutiao-81/commits/master'
