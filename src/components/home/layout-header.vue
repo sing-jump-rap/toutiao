@@ -37,7 +37,7 @@ export default {
         url: '/user/profile'
 
       }).then(result => {
-        this.userInfo = result.data.data// 接收数据对象
+        this.userInfo = result.data// 接收数据对象
       })
     },
     commonClick (key) {

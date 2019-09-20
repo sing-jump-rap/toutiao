@@ -63,7 +63,7 @@ export default {
           }).then(result => {
             // 成功
             // 将后台返回的令牌暂存到缓存中
-            window.localStorage.setItem('user-token', result.data.data.token)
+            window.localStorage.setItem('user-token', result.data.token)
             // 编程式导航跳转
             this.$router.push('/home')
           }).catch(() => {
