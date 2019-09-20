@@ -66,12 +66,6 @@ export default {
             window.localStorage.setItem('user-token', result.data.token)
             // 编程式导航跳转
             this.$router.push('/home')
-          }).catch(() => {
-            // 失败
-            this.$message({
-              type: 'warning',
-              message: '宁的手机号或验证码输入错误嗷'
-            })
           })
         }
       })
