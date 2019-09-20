@@ -3,7 +3,7 @@ import App from './App.vue'
 import router from './permission'
 import ElementUI from 'element-ui'// 引入ui
 import Component from './components'// 引入全局自定义组件
-import axios from 'axios'
+import axios from './utils/axios-config'
 import 'element-ui/lib/theme-chalk/index.css' // 引入样式
 import './styles/index.less'
 

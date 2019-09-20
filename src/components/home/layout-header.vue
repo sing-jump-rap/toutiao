@@ -33,10 +33,9 @@ export default {
   },
   methods: {
     getUserInfo () {
-      var token = window.localStorage.getItem('user-token')
       this.$axios({
-        url: '/user/profile',
-        headers: { 'Authorization': `Bearer ${token}` } // 请求参数
+        url: '/user/profile'
+
       }).then(result => {
         this.userInfo = result.data.data// 接收数据对象
       })
