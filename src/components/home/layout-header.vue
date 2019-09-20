@@ -7,10 +7,10 @@
     </el-col>
     <el-col :span="4">
       <!-- 右侧 -->
-      <img class="head-img" src="../../assets/img/avatar.jpg" alt="" style="margin-right:5px">
+      <img class="head-img" :src="userInfo.photo?userInfo.photo:defaultImg" alt="" style="margin-right:5px">
       <el-dropdown>
         <span class="el-dropdown-link">
-          鹅？<i class="el-icon-arrow-down el-icon--right"></i>
+          {{ userInfo.name }}<i class="el-icon-arrow-down el-icon--right"></i>
         </span>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item>个人信息</el-dropdown-item>
@@ -24,6 +24,27 @@
 
 <script>
 export default {
+  data () {
+    return {
+      userInfo: {}, // 个人信息对象
+      defaultImg: require('../../assets/img/avatar.jpg') // 转换base64
+    }
+  },
+  methods: {
+    getUserInfo () {
+      var token = window.localStorage.getItem('user-token')
+      this.$axios({
+        url: '/user/profile',
+        headers: { 'Authorization': `Bearer ${token}` } // 请求参数
+      }).then(result => {
+        this.userInfo = result.data.data// 接收数据对象
+      })
+    }
+  },
+  // 钩子函数，实例创建前后前
+  created () {
+    this.getUserInfo()
+  }
 
 }
 </script>
