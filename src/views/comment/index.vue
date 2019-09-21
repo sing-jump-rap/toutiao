@@ -20,6 +20,11 @@
               </template>
           </el-table-column>
       </el-table>
+      <!-- 分页 -->
+      <el-row type="flex" justify="center" style='margin:20px 0'>
+      <!-- page-size 是每页多少条 -->
+      <el-pagination  @current-change="changePage" :current-page="page.currentPage" :page-size="page.pageSize" :total="page.total" background layout="prev, pager, next" ></el-pagination>
+    </el-row>
   </el-card>
 </template>
 
@@ -27,20 +32,31 @@
 export default {
   data () {
     return {
-      list: []
+      list: [],
+      // 分页信息
+      page: {
+        total: 0, // 总条数
+        currentPage: 1, // 默认第一页
+        pageSize: 10 // 每页多少条
+      }
     }
   },
 
   methods: {
-
+    changePage (newPage) {
+      this.page.currentPage = newPage // 更新最新页码给 currernpage
+      this.getComment()
+    },
     // 调接口获取评论列表
     getComment () {
       this.$axios({
         url: '/articles',
-        params: { response_type: 'comment' } // 路径参数也就是query参数
+        params: { response_type: 'comment', page: this.page.currentPage, per_page: this.page.pageSize } // 路径参数也就是query参数
       }).then(result => {
         // 返回的数组给list
         this.list = result.data.results
+        // 把总条数给 分页组件的总条数
+        this.page.total = result.data.total_count
       })
     },
     //   formatter是elementui用来格式化数据的属性需要的方法
