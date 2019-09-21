@@ -44,7 +44,7 @@ axios.interceptors.response.use(function (response) {
     default:
       break
   }
-  Message({ message })
+  Message({ message, type: 'warning' })
   // 异常处理函数已经处理了所有错误，所以不再进入登录页面中的catch，终止错误
   return new Promise(function () {
 
