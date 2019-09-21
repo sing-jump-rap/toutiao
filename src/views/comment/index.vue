@@ -55,7 +55,7 @@ export default {
           url: 'comments/status',
           method: 'put',
           // 路劲参数
-          params: { article_id: row.id },
+          params: { article_id: row.id.toString() },
           //   body参数
           data: { allow_comment: !row.comment_status }
         }).then(() => {
