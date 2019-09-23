@@ -5,7 +5,7 @@
               <img src="../../assets/img/logo_index.png" alt="">
           </div>
           <!-- 数据校验 el-from绑定model，绑定rules规则 -->
-          <el-form ref="myForm" :model="loginFrom" :rules="loginRules" style="margin-top:20px">
+          <el-form status-icon  ref="myForm" :model="loginFrom" :rules="loginRules" style="margin-top:20px">
               <el-form-item prop="mobile">
                   <!-- 手机号 -->
                   <el-input v-model="loginFrom.mobile" placeholder="输入手机号！！"></el-input>

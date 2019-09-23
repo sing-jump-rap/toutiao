@@ -1,5 +1,5 @@
 <template>
-  <el-card>
+  <el-card v-loading="loading">
       <!-- 面包屑组件 -->
       <bread-crumb slot="header">
         <template slot="title">评论列表</template>
@@ -38,7 +38,8 @@ export default {
         total: 0, // 总条数
         currentPage: 1, // 默认第一页
         pageSize: 10 // 每页多少条
-      }
+      },
+      loading: false
     }
   },
 
@@ -49,6 +50,7 @@ export default {
     },
     // 调接口获取评论列表
     getComment () {
+      this.loading = true
       this.$axios({
         url: '/articles',
         params: { response_type: 'comment', page: this.page.currentPage, per_page: this.page.pageSize } // 路径参数也就是query参数
@@ -57,6 +59,8 @@ export default {
         this.list = result.data.results
         // 把总条数给 分页组件的总条数
         this.page.total = result.data.total_count
+        // 关遮罩
+        this.loading = false
       })
     },
     //   formatter是elementui用来格式化数据的属性需要的方法
