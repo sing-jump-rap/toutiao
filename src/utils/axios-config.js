@@ -5,7 +5,7 @@ import jsonBig from 'json-bigint' // 引入jsonbig
 import { Message } from 'element-ui'// 引入element中的提示方法
 // 处理大数字型
 axios.defaults.transformResponse = [function (data) {
-  return jsonBig.parse(data) // 换了一个转化方法 使得 计算更精确 保证id不失真
+  return data ? jsonBig.parse(data) : {} // 换了一个转化方法 使得 计算更精确 保证id不失真
 }]
 // 请求拦截
 axios.interceptors.request.use(function (config) {

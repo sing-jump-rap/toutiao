@@ -16,8 +16,9 @@
           <el-card class="img-item" v-for="item in list" :key="item.id">
             <img :src="item.url" alt />
             <div class="operate">
-              <i :style="{color: item.is_collected ? 'red' : '#000'}" class="el-icon-star-on"></i>
-              <i class="el-icon-delete-solid"></i>
+              <!-- 收藏和删除 -->
+              <i  @click="collectOrCancel(item)" :style="{color: item.is_collected ? 'red' : '#000'}" class="el-icon-star-on"></i>
+              <i  @click="delImg(item.id)" class="el-icon-delete-solid"></i>
             </div>
           </el-card>
         </div>
@@ -61,6 +62,31 @@ export default {
     }
   },
   methods: {
+    // 取消或收藏
+    collectOrCancel (item) {
+      var mess = item.is_collected ? '取消' : ''
+      this.$confirm(`宁确定要${mess}收藏该图片？`).then(() => {
+        this.$axios({
+          url: `/user/images/${item.id}`,
+          method: 'put',
+          data: { collect: !item.is_collected } // 取反 收藏和取消收藏当前
+        }).then(() => {
+          // 成功 重新拉取数据
+          this.getMaterial()
+        })
+      })
+    },
+    // 删除
+    delImg (id) {
+      this.$confirm('宁确定要删除该数据马？').then(() => {
+        this.$axios({
+          url: `/user/images/${id}`,
+          method: 'delete'
+        }).then(() => {
+          this.getMaterial()
+        })
+      })
+    },
     //   上传方法
     uploadImg (params) {
       const data = new FormData() // 声明一个新的表单
