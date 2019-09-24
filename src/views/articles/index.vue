@@ -38,11 +38,11 @@
          <!-- 布局 -->
          <!-- 左侧 -->
         <div class='left'>
-            <img src="../../assets/img/404.png" alt="">
+            <img :src="item.cover.images.length?item.cover.images[0]:defaultImg" alt="">
             <div class='info'>
-                <span class='title'>十一放假,大家不开心</span>
-                <el-tag class='status'>已发表</el-tag>
-                <span class='date'>2019-09-23 11:21:21</span>
+                <span class='title'>{{item.title}}</span>
+                <el-tag :type="item.status|statusType" class='status'>{{item.status|statusText}}</el-tag>
+                <span class='date'>{{item.pubdate}}</span>
             </div>
         </div>
         <!-- 右侧 -->
@@ -58,7 +58,53 @@
 export default {
   data () {
     return {
-      list: [1, 2]
+      list: [],
+      defaultImg: require('../../assets/img/abb.jpg') // 将图片转为base64
+    }
+  },
+  methods: {
+    getArticles () {
+      this.$axios({
+        url: '/articles'
+      }).then(result => {
+        //   获取文章列表
+        this.list = result.data.results
+      })
+    }
+  },
+  created () {
+    this.getArticles() // 获取文章
+  },
+  // 过滤器
+  filters: {
+    statusText (value) {
+      switch (value) {
+        case 0:
+          return '草稿'
+        case 1:
+          return '待审核'
+        case 2:
+          return '已发表'
+        case 3:
+          return '审核失败'
+        case 4:
+          return '已删除'
+      }
+    },
+    // 处理状态的显示样式
+    statusType (value) {
+      switch (value) {
+        case 0:
+          return 'warning'
+        case 1:
+          return 'info'
+        case 2:
+          return 'success'
+        case 3:
+          return 'danger'
+        case 4:
+          return 'danger'
+      }
     }
   }
 }
