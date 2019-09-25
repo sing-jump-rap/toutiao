@@ -29,6 +29,9 @@ export default new Router({
           path: 'articles',
           component: () => import('./views/articles')
         }, {
+          path: 'publish/:articleId', // 定义参数
+          component: () => import('./views/publish')
+        }, {
           path: 'publish',
           component: () => import('./views/publish')
         }
