@@ -55,7 +55,7 @@
         <!-- 右侧 -->
         <div class='right'>
             <span><i class="el-icon-edit"></i>修改</span>
-            <span><i class="el-icon-delete"></i>删除</span>
+            <span @click="delArticles(item.id)"><i class="el-icon-delete"></i>删除</span>
         </div>
      </div>
      <!-- 分页 -->
@@ -92,6 +92,17 @@ export default {
     }
   },
   methods: {
+    // 删除
+    delArticles (id) {
+      this.$confirm('宁确定要删除此文章吗？').then(() => {
+        this.$axios({
+          url: `/articles/${id.toString()}`,
+          method: 'delete'
+        }).then(() => {
+          this.queryArticles()
+        })
+      })
+    },
     // 绑定状态发生变化事件
     changeCondition () {
       // 开始时间
@@ -107,7 +118,7 @@ export default {
       this.page.currentPage = newPage // 赋值最新页码
       this.queryArticles()
     },
-    // 为分页携带条件封装
+    // 带条件获取数据 （为分页携带条件封装）
     queryArticles () {
       // 组装请求参数
       let params = {
@@ -221,6 +232,8 @@ export default {
         font-size: 12px;
         span {
             margin-right:8px;
+            cursor: pointer;
+
         }
     }
 }
