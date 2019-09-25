@@ -5,7 +5,9 @@
           <img :src="item?item:defaultImg" alt="">
       </div>
       <!-- 弹层组件 内有visible参数 参数为true时弹层显示 close为组件的关闭事件-->
-      <el-dialog @close="dialogVisible=false" :visible="dialogVisible"></el-dialog>
+      <el-dialog @close="dialogVisible=false" :visible="dialogVisible">
+          <select-image></select-image>
+      </el-dialog>
   </div>
 </template>
 
