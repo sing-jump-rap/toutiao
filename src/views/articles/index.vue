@@ -6,27 +6,34 @@
                内容列表
            </template>
         </bread-crumb>
+        {{formData}}
         <!-- 表单 -->
         <el-form style="margin-left:50px">
             <!-- 文章状态 -->
             <el-form-item label="文章状态:">
-                 <el-radio-group>
-                   <el-radio>全部</el-radio>
-                   <el-radio>草稿</el-radio>
-                   <el-radio>待审核</el-radio>
-                   <el-radio>审核通过</el-radio>
-                   <el-radio>审核失败</el-radio>
+              <!-- v-model来源于el-radio中的label属性 -->
+                 <el-radio-group @change="changeCondition" v-model="formData.status">
+                   <el-radio :label="5">全部</el-radio>
+                   <el-radio :label="0">草稿</el-radio>
+                   <el-radio :label="1">待审核</el-radio>
+                   <el-radio :label="2">审核通过</el-radio>
+                   <el-radio :label="3">审核失败</el-radio>
 
             </el-radio-group>
             </el-form-item>
             <el-form-item label="频道列表:">
                 <!-- 频道列表 -->
-                <el-select>
+                <el-select @change="changeCondition" v-model="formData.channel_id">
+                  <el-option v-for="item in channels" :key="item.id" :value="item.id" :label="item.name"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="时间选择:">
+                   <!-- value-format指定绑定的时间格式 -->
                  <el-date-picker
+                 @change="changeCondition"
+                 v-model="formData.date"
                    type="daterange"
+                   value-format="yyyy-MM-dd"
                    start-placeholder="开始日期"
                    end-placeholder="结束日期">
           </el-date-picker>
@@ -58,22 +65,56 @@
 export default {
   data () {
     return {
+      formData: {
+        status: 5, // 文章状态
+        channel_id: null, // 频道id 这里必须写null而不能写空串否则组装参数会出错
+        date: []
+      },
       list: [],
+      channels: [], // 接收频道数据
       defaultImg: require('../../assets/img/abb.jpg') // 将图片转为base64
     }
   },
   methods: {
-    getArticles () {
+    // 绑定状态发生变化事件
+    changeCondition () {
+      // 开始时间
+      // var beginDate = this.formData.date.length ? this.formData[0].date[0] : null
+      // 结束时间
+      // var endDate = this.formData.date.length > 1 ? this.formData[1].date[1] : null
+
+      // 组装请求参数
+      var params = {
+        status: this.formData.status === 5 ? null : this.formData.status,
+        channel_id: this.formData.channel_id,
+        begin_pubdate: this.formData.date.length ? this.formData.date[0] : null,
+        end_pubdate: this.formData.date.length > 1 ? this.formData.date[1] : null
+      }
+      debugger
+      this.getArticles(params)
+    },
+    // 获取数据
+    getArticles (params) {
       this.$axios({
-        url: '/articles'
+        url: '/articles',
+        params
       }).then(result => {
         //   获取文章列表
         this.list = result.data.results
+      })
+    },
+    // 获取频道列表
+    getChannels () {
+      this.$axios({
+        url: '/channels'
+      }).then((result) => {
+        this.channels = result.data.channels // 获取channels
       })
     }
   },
   created () {
     this.getArticles() // 获取文章
+    this.getChannels() // 获取频道
   },
   // 过滤器
   filters: {
