@@ -6,7 +6,7 @@
                内容列表
            </template>
         </bread-crumb>
-        {{formData}}
+        <!-- {{formData}} -->
         <!-- 表单 -->
         <el-form style="margin-left:50px">
             <!-- 文章状态 -->
@@ -40,7 +40,7 @@
             </el-form-item>
         </el-form>
           <!-- 主体内容 -->
-     <div class='total'>共找到55091条符合条件的内容</div>
+     <div class='total'>共找到{{page.total}}条符合条件的内容</div>
      <div class='article-item' v-for="(item,index) in list" :key="index">
          <!-- 布局 -->
          <!-- 左侧 -->
@@ -58,6 +58,17 @@
             <span><i class="el-icon-delete"></i>删除</span>
         </div>
      </div>
+     <!-- 分页 -->
+         <el-row type='flex' justify="center" style='margin:10px 0'>
+       <el-pagination
+       @current-change="changePage"
+       :current-page="page.currentPage"
+       :page-size="page.pageSize"
+  background
+  layout="prev, pager, next"
+  :total="page.total">
+</el-pagination>
+     </el-row>
   </el-card>
 </template>
 
@@ -72,7 +83,12 @@ export default {
       },
       list: [],
       channels: [], // 接收频道数据
-      defaultImg: require('../../assets/img/abb.jpg') // 将图片转为base64
+      defaultImg: require('../../assets/img/abb.jpg'), // 将图片转为base64
+      page: {
+        total: 0,
+        currentPage: 1,
+        pageSize: 10
+      }
     }
   },
   methods: {
@@ -83,14 +99,25 @@ export default {
       // 结束时间
       // var endDate = this.formData.date.length > 1 ? this.formData[1].date[1] : null
 
+      this.page.currentPage = 1 // 条件改变 默认会第一页
+      this.queryArticles()
+    },
+    // 分页
+    changePage (newPage) {
+      this.page.currentPage = newPage // 赋值最新页码
+      this.queryArticles()
+    },
+    // 为分页携带条件封装
+    queryArticles () {
       // 组装请求参数
-      var params = {
+      let params = {
         status: this.formData.status === 5 ? null : this.formData.status,
         channel_id: this.formData.channel_id,
         begin_pubdate: this.formData.date.length ? this.formData.date[0] : null,
-        end_pubdate: this.formData.date.length > 1 ? this.formData.date[1] : null
+        end_pubdate: this.formData.date.length > 1 ? this.formData.date[1] : null,
+        page: this.page.currentPage,
+        per_page: this.page.pageSize
       }
-      debugger
       this.getArticles(params)
     },
     // 获取数据
@@ -101,6 +128,8 @@ export default {
       }).then(result => {
         //   获取文章列表
         this.list = result.data.results
+        // 赋值记录总数
+        this.page.total = result.data.total_count
       })
     },
     // 获取频道列表
