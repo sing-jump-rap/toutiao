@@ -14,13 +14,15 @@
                 <quill-editor v-model="formData.content"  style='height:300px'></quill-editor>
             </el-form-item>
              <el-form-item label="封面"  prop="cover" style='margin-top:120px'>
-                <el-radio-group v-model="formData.cover.type">
-                    <el-radio :label="1">单选</el-radio>
+                <el-radio-group @change="changeType" v-model="formData.cover.type">
+                    <el-radio :label="1">单图</el-radio>
                     <el-radio :label="3">三图</el-radio>
                     <el-radio :label="0">无图</el-radio>
                     <el-radio :label="-1">自动</el-radio>
                 </el-radio-group>
             </el-form-item>
+            <!-- 封面组件 传递父组件的images给子组件-->
+            <cover-image :images="formData.cover.images"></cover-image>
             <el-form-item label="频道" prop="channel_id">
                 <el-select v-model="formData.channel_id">
                     <el-option v-for="item in channels" :key="item.id" :value="item.id" :label="item.name"></el-option>
@@ -45,6 +47,7 @@ export default {
         title: '', // 标题
         content: '', // 内容
         channels_id: null, // 频道id
+        // 封面
         cover: {
           type: 0,
           images: []
@@ -61,6 +64,17 @@ export default {
     }
   },
   methods: {
+    // 类型改变事件
+    changeType () {
+      // 可以获取到最新的type 根据type进行images的长度变化
+      if (this.formData.cover.type === 1) {
+        this.formData.cover.images = ['']
+      } else if (this.formData.cover.type === 3) {
+        this.formData.cover.images = ['', '', '']
+      } else {
+        this.formData.cover.images = []
+      }
+    },
     // 获取频道数据
     getChannels () {
       this.$axios({
