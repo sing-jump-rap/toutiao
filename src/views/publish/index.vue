@@ -1,5 +1,5 @@
 <template>
-  <el-card>
+  <el-card v-loading="loading">
       <bread-crumb slot="header">
         <template slot="title">
             发布文章
@@ -53,6 +53,7 @@ export default {
           images: []
         }
       },
+      // 校验规则
       publishRules: {
         title: [{ required: true, message: '标题不能为空' }, {
           // 最小长度 min  最大长度max
@@ -60,7 +61,9 @@ export default {
         }],
         content: [{ required: true, message: '内容不能为空' }],
         channel_id: [{ required: true, message: '频道不能为空' }]
-      }
+      },
+      // 遮罩
+      loading: false
     }
   },
   methods: {
@@ -85,10 +88,12 @@ export default {
     },
     // 根据文章id获取文章详情
     getArticleById (articleId) {
+      this.loading = true
       this.$axios({
         url: `/articles/${articleId}`
       }).then((result) => {
         this.formData = result.data
+        this.loading = false
       })
     },
     // 发布文章
