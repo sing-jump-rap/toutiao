@@ -3,7 +3,8 @@
       <el-tab-pane label="素材库">
           <div class="imgs-list">
               <el-card class="imgs-item" v-for="item in list" :key="item.id">
-                  <img :src="item.url" alt="">
+              <!-- 点击时传出图片地址-->
+                  <img @click="clickImg(item)" :src="item.url" alt="">
               </el-card>
           </div>
           <el-row type="flex" justify="center">
@@ -37,6 +38,10 @@ export default {
     }
   },
   methods: {
+    // 点击素材图片触发
+    clickImg (item) {
+      this.$emit('seletcOneImg', item.url) // 子传父的自定义事件
+    },
     // 页码改变事件
     changePage (newPage) {
       this.page.currentPage = newPage // 获取最新页

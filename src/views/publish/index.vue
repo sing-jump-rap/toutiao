@@ -22,7 +22,7 @@
                 </el-radio-group>
             </el-form-item>
             <!-- 封面组件 传递父组件的images给子组件-->
-            <cover-image :images="formData.cover.images"></cover-image>
+            <cover-image @selectImg="changImg" :images="formData.cover.images"></cover-image>
             <el-form-item label="频道" prop="channel_id">
                 <el-select v-model="formData.channel_id">
                     <el-option v-for="item in channels" :key="item.id" :value="item.id" :label="item.name"></el-option>
@@ -67,6 +67,22 @@ export default {
     }
   },
   methods: {
+    // 接收 更改image,更改时注意vue更新原理，不能直接用数组的索引赋值
+    changImg (url, index) {
+      this.formData.cover.images = this.formData.cover.images.map(function (item, i) {
+        if (index === i) {
+          // 说明找到了要修改的值
+          return url
+        }
+        return item
+      })
+
+      // 简写
+      // this.formData.cover.images = this.formData.cover.images.map((item, i) => i === index ? url : item)
+
+      // 方法二
+      // this.formData.cover.images.splice(index, 1, url)
+    },
     // 类型改变事件
     changeType () {
       // 可以获取到最新的type 根据type进行images的长度变化
